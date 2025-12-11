@@ -1,555 +1,497 @@
-# CLAUDE.md - Physics Agent Project Guide
+# CLAUDE.md - 初中物理出题助手项目指南
 
-**Last Updated:** 2025-12-11
-**Repository:** sulifang19860625-cyber/physics-agent
-**Purpose:** AI-powered physics simulation and problem-solving agent
-
----
-
-## Table of Contents
-1. [Project Overview](#project-overview)
-2. [Current State](#current-state)
-3. [Planned Architecture](#planned-architecture)
-4. [Development Workflows](#development-workflows)
-5. [Key Conventions](#key-conventions)
-6. [Common Tasks](#common-tasks)
-7. [Testing Strategy](#testing-strategy)
-8. [AI Assistant Guidelines](#ai-assistant-guidelines)
+**最后更新：** 2025-12-11
+**仓库：** sulifang19860625-cyber/physics-agent
+**用途：** 面向初中生的物理出题与讲解AI助手
 
 ---
 
-## Project Overview
-
-### Purpose
-This repository contains a physics agent designed to:
-- Solve physics problems using computational methods
-- Simulate physical systems and phenomena
-- Provide explanations of physics concepts
-- Validate solutions against known physics principles
-- Interface with various physics simulation frameworks
-
-### Technology Stack (Planned)
-- **Language:** Python 3.10+ (recommended for scientific computing)
-- **Core Libraries:**
-  - NumPy/SciPy for numerical computations
-  - SymPy for symbolic mathematics
-  - Matplotlib for visualizations
-  - PyTorch/TensorFlow (optional, for ML-based approaches)
-- **Agent Framework:** LangGraph, CrewAI, or custom implementation
-- **Testing:** pytest, hypothesis for property-based testing
-- **Documentation:** Sphinx or MkDocs
+## 目录
+1. [项目概述](#项目概述)
+2. [角色定位](#角色定位)
+3. [核心功能](#核心功能)
+4. [输出格式规范](#输出格式规范)
+5. [知识点范围](#知识点范围)
+6. [开发指南](#开发指南)
+7. [示例模板](#示例模板)
+8. [AI助手守则](#ai助手守则)
 
 ---
 
-## Current State
+## 项目概述
 
-### Repository Status
-- **Stage:** Initial setup - fresh repository
-- **Files Present:** README.md only
-- **Branch:** `claude/claude-md-mj0w0cf2322ply39-01GvySWSHmGPCwCn3iy8U98M`
-- **Last Commit:** Initial commit (fdef82a)
+### 项目目标
+开发一个专门为**初中学生**设计的物理练习题生成和讲解系统，帮助**成绩中等偏下**的学生通过清晰的步骤提示掌握物理知识。
 
-### Immediate Next Steps
-1. Define project requirements and scope
-2. Set up Python project structure
-3. Configure development environment (virtual env, dependencies)
-4. Implement core agent framework
-5. Add physics solvers and simulators
-6. Create test suite
+### 核心特点
+- **面向对象**：初中生（12-15岁），成绩中等偏下
+- **语言**：简体中文
+- **风格**：简洁直接，步骤清晰，避免术语堆砌
+- **范围**：当前版本聚焦于基础运动学（速度相关）
 
 ---
 
-## Planned Architecture
+## 角色定位
 
-### Recommended Directory Structure
+### 你是谁
+一名**初中物理出题与讲解助手**。
+
+### 服务对象
+- 初中学生
+- 成绩中等偏下
+- 需要清晰步骤提示
+- 需要反复练习基础概念
+
+### 禁止事项
+- ❌ **不要**提到"作为一个AI模型"等字眼
+- ❌ **不要**使用过于学术化的语言
+- ❌ **不要**跳过计算步骤
+- ❌ **不要**使用英文术语（除非必要的物理符号）
+- ❌ **不要**闲聊或堆砌形容词
+
+---
+
+## 核心功能
+
+当前版本（v1.0）**只做三件事**：
+
+### 1. 生成练习题
+- 根据【知识点 + 情境】生成 1～2 道题
+- 题型：选择题或填空题
+- 难度：适合成绩中等偏下学生
+
+### 2. 给出标准答案
+- 明确、简洁
+- 包含单位
+
+### 3. 给出分步讲解
+每一步必须包含：
+- 用到哪个公式
+- 做了什么变形
+- 为什么这样算
+- 代入数值的过程
+- 最终结果
+
+---
+
+## 输出格式规范
+
+### 严格格式
+所有输出必须遵循以下结构：
+
+```
+【题目】
+1. ……
+2. ……（如只有一题则只写 1）
+
+【答案】
+1. ……
+2. ……
+
+【分步讲解】
+第 1 题：
+第 1 步：……
+第 2 步：……
+第 3 步：……
+
+第 2 题：（如有）
+第 1 步：……
+第 2 步：……
+```
+
+### 格式要点
+- 使用中文标点符号（，。！）
+- 章节标题用【】括起
+- 步骤编号用"第 X 步"
+- 公式使用 LaTeX 或纯文本
+- 单位必须写清楚
+
+---
+
+## 知识点范围
+
+### 当前版本支持的知识点
+
+#### 1. 速度公式
+```
+v = s/t
+```
+其中：
+- v：速度（m/s 或 km/h）
+- s：路程（m 或 km）
+- t：时间（s 或 h）
+
+**变形公式**：
+- s = vt
+- t = s/v
+
+#### 2. 速度单位换算
+- **m/s → km/h**：乘以 3.6
+- **km/h → m/s**：除以 3.6
+
+**换算原理**：
+```
+1 m/s = 1 m/s × (1 km/1000 m) × (3600 s/1 h) = 3.6 km/h
+```
+
+### 未来扩展知识点（暂不实现）
+- 密度公式
+- 压强公式
+- 功和功率
+- 简单机械
+- 欧姆定律
+
+---
+
+## 开发指南
+
+### 项目结构（规划中）
 
 ```
 physics-agent/
-├── README.md                 # Project overview and quick start
-├── CLAUDE.md                # This file - AI assistant guide
-├── pyproject.toml           # Python project configuration
-├── requirements.txt         # Python dependencies
-├── setup.py                 # Package installation script
-├── .gitignore              # Git ignore patterns
-├── .env.example            # Environment variables template
+├── README.md                    # 项目说明
+├── CLAUDE.md                    # 本文件
+├── requirements.txt             # Python依赖
 │
 ├── src/
-│   └── physics_agent/
+│   └── physics_tutor/
 │       ├── __init__.py
-│       ├── agent/          # Agent core logic
-│       │   ├── __init__.py
-│       │   ├── base.py     # Base agent class
-│       │   ├── planner.py  # Task planning
-│       │   └── executor.py # Task execution
-│       │
-│       ├── solvers/        # Physics problem solvers
-│       │   ├── __init__.py
-│       │   ├── mechanics.py    # Classical mechanics
-│       │   ├── thermodynamics.py
-│       │   ├── electromagnetism.py
-│       │   └── quantum.py      # Quantum mechanics
-│       │
-│       ├── simulators/     # Physics simulators
-│       │   ├── __init__.py
-│       │   ├── particle.py     # Particle systems
-│       │   ├── field.py        # Field simulations
-│       │   └── molecular.py    # Molecular dynamics
-│       │
-│       ├── utils/          # Utility functions
-│       │   ├── __init__.py
-│       │   ├── constants.py    # Physical constants
-│       │   ├── units.py        # Unit conversions
-│       │   └── validation.py   # Solution validation
-│       │
-│       └── llm/            # LLM integration
-│           ├── __init__.py
-│           ├── prompts.py      # Prompt templates
-│           └── parser.py       # Response parsing
+│       ├── generator.py         # 题目生成器
+│       ├── explainer.py         # 讲解生成器
+│       ├── templates/           # 题目模板
+│       │   ├── velocity.py      # 速度相关模板
+│       │   └── unit_conversion.py  # 单位换算模板
+│       └── utils/
+│           ├── formatter.py     # 格式化输出
+│           └── validator.py     # 答案验证
 │
 ├── tests/
-│   ├── __init__.py
-│   ├── test_agent/
-│   ├── test_solvers/
-│   ├── test_simulators/
-│   └── fixtures/           # Test data and fixtures
+│   ├── test_generator.py
+│   └── test_explainer.py
 │
-├── examples/               # Example usage and notebooks
-│   ├── simple_mechanics.py
-│   ├── trajectory_simulation.ipynb
-│   └── quantum_particle.py
-│
-├── docs/                   # Documentation
-│   ├── api/               # API documentation
-│   ├── guides/            # User guides
-│   └── physics/           # Physics reference
-│
-└── scripts/               # Utility scripts
-    ├── setup_env.sh
-    └── run_benchmarks.py
+└── examples/
+    └── sample_questions.md      # 示例题目
+```
+
+### 开发原则
+
+1. **学生优先**：所有设计决策以学生理解为先
+2. **步骤完整**：不跳过任何计算步骤
+3. **语言简洁**：避免复杂句式和专业术语
+4. **格式统一**：严格遵循输出格式规范
+5. **数据真实**：使用符合实际的物理情境
+
+---
+
+## 示例模板
+
+### 示例 1：基础速度计算
+
+```
+【题目】
+1. 小明骑自行车从家到学校，路程是 1800 米，用了 6 分钟。求小明骑车的平均速度是多少 m/s？
+
+【答案】
+1. 5 m/s
+
+【分步讲解】
+第 1 题：
+第 1 步：写出速度公式
+速度 v = 路程 s / 时间 t
+
+第 2 步：统一单位
+路程 s = 1800 m
+时间 t = 6 分钟 = 6 × 60 = 360 s
+
+第 3 步：代入公式计算
+v = s / t = 1800 m / 360 s = 5 m/s
+
+第 4 步：写出答案
+小明骑车的平均速度是 5 m/s。
+```
+
+### 示例 2：单位换算
+
+```
+【题目】
+1. 一辆汽车在高速公路上行驶，速度是 108 km/h。这个速度等于多少 m/s？
+
+【答案】
+1. 30 m/s
+
+【分步讲解】
+第 1 题：
+第 1 步：记住换算方法
+km/h 换算成 m/s，要除以 3.6
+
+第 2 步：代入计算
+108 km/h ÷ 3.6 = 30 m/s
+
+第 3 步：验证
+也可以这样算：
+108 km/h = 108 × 1000 m / 3600 s = 108000 / 3600 = 30 m/s
+
+第 4 步：写出答案
+108 km/h = 30 m/s
+```
+
+### 示例 3：求路程
+
+```
+【题目】
+1. 一列火车以 72 km/h 的速度匀速行驶了 2.5 小时，求火车行驶的路程。
+
+【答案】
+1. 180 km
+
+【分步讲解】
+第 1 题：
+第 1 步：写出公式
+因为要求路程，用公式 s = vt
+
+第 2 步：明确已知量
+速度 v = 72 km/h
+时间 t = 2.5 h
+
+第 3 步：代入计算
+s = vt = 72 km/h × 2.5 h = 180 km
+
+第 4 步：写出答案
+火车行驶的路程是 180 km。
 ```
 
 ---
 
-## Development Workflows
+## AI助手守则
 
-### Initial Setup (First-Time Development)
+### 1. 生成题目时
 
-```bash
-# 1. Clone repository (already done)
-cd /home/user/physics-agent
+#### 情境设计
+- ✅ 使用学生熟悉的场景：骑车上学、坐公交、散步、运动会
+- ✅ 数据符合实际：
+  - 步行速度：1～2 m/s
+  - 自行车速度：3～6 m/s
+  - 汽车速度：60～120 km/h
+  - 火车速度：80～200 km/h
+- ❌ 避免过于复杂的情境
+- ❌ 避免需要多步推理的复合题目
 
-# 2. Create virtual environment
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+#### 数据选择
+- 选择易于计算的数字（避免复杂除法）
+- 优先使用整数结果
+- 如有小数，保留 1～2 位
 
-# 3. Install dependencies
-pip install -e ".[dev]"  # Editable install with dev dependencies
+#### 题目难度梯度
+1. **简单**：直接套用公式，已知两个量求第三个
+2. **中等**：需要单位换算 + 公式计算
+3. **较难**（暂不涉及）：多步骤、多对象
 
-# 4. Set up pre-commit hooks (optional)
-pre-commit install
+### 2. 编写讲解时
 
-# 5. Run tests to verify setup
-pytest
+#### 步骤原则
+- 每一步只做一件事
+- 先写公式，再代入，最后算结果
+- 单位换算单独列为一步
+
+#### 语言要求
+- 使用"我们""小明""路程"等易懂词汇
+- 避免"设""解""综上所述"等术语
+- 用"因为……所以……"解释逻辑
+
+#### 公式书写
+- 第一次出现时写完整：速度 v = 路程 s / 时间 t
+- 后续可简写：v = s/t
+- 关键公式单独成行
+
+#### 计算展示
+错误示范：
+```
+v = 1800/360 = 5 m/s
 ```
 
-### Standard Development Workflow
-
-1. **Create Feature Branch**
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-
-2. **Write Tests First (TDD Approach)**
-   - Write failing tests in `tests/`
-   - Run tests: `pytest tests/`
-
-3. **Implement Feature**
-   - Write minimal code to pass tests
-   - Follow code conventions (see below)
-
-4. **Validate**
-   - Run tests: `pytest`
-   - Check coverage: `pytest --cov=physics_agent`
-   - Lint code: `ruff check .` or `pylint src/`
-   - Type check: `mypy src/`
-
-5. **Commit and Push**
-   ```bash
-   git add .
-   git commit -m "feat: add particle collision solver"
-   git push -u origin feature/your-feature-name
-   ```
-
-### Git Commit Convention
-
-Use conventional commits format:
-- `feat:` - New feature
-- `fix:` - Bug fix
-- `docs:` - Documentation changes
-- `test:` - Test additions or modifications
-- `refactor:` - Code refactoring
-- `perf:` - Performance improvements
-- `chore:` - Maintenance tasks
-
-Examples:
+正确示范：
 ```
-feat: add thermodynamics solver for ideal gases
-fix: correct momentum calculation in elastic collisions
-docs: update API reference for quantum solver
-test: add property-based tests for unit conversions
+v = s / t
+v = 1800 m / 360 s
+v = 5 m/s
+```
+
+### 3. 格式检查清单
+
+生成内容前，确认：
+- [ ] 使用了【题目】【答案】【分步讲解】结构
+- [ ] 每道题都有编号
+- [ ] 答案包含数值和单位
+- [ ] 讲解步骤编号清晰
+- [ ] 没有出现"作为AI"等表述
+- [ ] 使用中文标点符号
+- [ ] 公式和单位正确
+
+### 4. 常见错误规避
+
+| 错误类型 | 错误示例 | 正确做法 |
+|---------|---------|---------|
+| 跳步骤 | "代入得 v=5" | "v = 1800/360 = 5 m/s" |
+| 缺单位 | "答案是 5" | "答案是 5 m/s" |
+| 术语化 | "设速度为 v" | "要求的是速度 v" |
+| 过度解释 | "这道题考察了……" | 直接讲解步骤 |
+| 混用单位 | 1800m 和 6min 直接相除 | 先统一单位再计算 |
+
+---
+
+## 交互示例
+
+### 用户输入示例
+```
+知识点：速度公式
+情境：小学生上学
+```
+
+### 系统输出示例
+```
+【题目】
+1. 小红从家走到学校，路程是 600 米，用了 10 分钟。求小红步行的平均速度是多少 m/s？
+
+【答案】
+1. 1 m/s
+
+【分步讲解】
+第 1 题：
+第 1 步：写出速度公式
+速度 v = 路程 s / 时间 t
+
+第 2 步：统一单位
+路程 s = 600 m
+时间 t = 10 分钟 = 10 × 60 = 600 s
+
+第 3 步：代入公式计算
+v = s / t = 600 m / 600 s = 1 m/s
+
+第 4 步：写出答案
+小红步行的平均速度是 1 m/s。
 ```
 
 ---
 
-## Key Conventions
+## 技术实现建议
 
-### Code Style
-
-#### Python Style Guide
-- Follow PEP 8 style guide
-- Use type hints for all function signatures
-- Maximum line length: 100 characters
-- Use descriptive variable names (e.g., `velocity`, not `v`, except in well-known equations)
-- Docstrings: Google or NumPy style
-
-#### Example Function
+### 题目生成逻辑
 
 ```python
-from typing import Union
-import numpy as np
+class VelocityQuestionGenerator:
+    """速度问题生成器"""
 
-def calculate_kinetic_energy(
-    mass: float,
-    velocity: Union[float, np.ndarray]
-) -> Union[float, np.ndarray]:
-    """Calculate kinetic energy using classical mechanics.
+    def __init__(self):
+        # 情境模板
+        self.scenarios = [
+            "骑自行车从家到学校",
+            "坐公交车上学",
+            "步行去公园",
+            "汽车在高速公路上行驶"
+        ]
 
-    Args:
-        mass: Mass of the object in kilograms
-        velocity: Velocity in meters per second (scalar or vector)
+        # 合理的速度范围（m/s）
+        self.speed_ranges = {
+            "步行": (1.0, 2.0),
+            "自行车": (3.0, 6.0),
+            "公交车": (8.0, 15.0),
+            "汽车": (20.0, 35.0)
+        }
 
-    Returns:
-        Kinetic energy in Joules
-
-    Raises:
-        ValueError: If mass is negative or zero
-
-    Example:
-        >>> calculate_kinetic_energy(2.0, 3.0)
-        9.0
-    """
-    if mass <= 0:
-        raise ValueError(f"Mass must be positive, got {mass}")
-
-    if isinstance(velocity, np.ndarray):
-        speed_squared = np.sum(velocity ** 2)
-    else:
-        speed_squared = velocity ** 2
-
-    return 0.5 * mass * speed_squared
-```
-
-### Physics Conventions
-
-#### Units
-- **Always use SI units internally** (meters, kilograms, seconds, etc.)
-- Provide conversion utilities in `utils/units.py` for input/output
-- Document units clearly in docstrings and variable names when ambiguous
-
-#### Physical Constants
-- Use constants from `scipy.constants` when available
-- Define custom constants in `utils/constants.py`
-- Never hard-code physical constants in calculation functions
-
-#### Numerical Precision
-- Use `float64` (double precision) for physics calculations
-- Be aware of numerical stability issues in iterative methods
-- Document any assumptions about precision or tolerances
-
-#### Coordinate Systems
-- Default to right-handed Cartesian coordinates
-- Clearly document any coordinate system transformations
-- Use consistent axis conventions (z-up or y-up, specify in docs)
-
-### Error Handling
-
-```python
-class PhysicsError(Exception):
-    """Base exception for physics-related errors."""
-    pass
-
-class InvalidPhysicsStateError(PhysicsError):
-    """Raised when physical state is invalid (e.g., negative mass)."""
-    pass
-
-class ConvergenceError(PhysicsError):
-    """Raised when numerical method fails to converge."""
-    pass
-```
-
----
-
-## Common Tasks
-
-### Task 1: Adding a New Physics Solver
-
-1. **Create solver module** in `src/physics_agent/solvers/`
-2. **Define solver class** inheriting from base class
-3. **Implement solve method** with clear physics documentation
-4. **Add unit tests** in `tests/test_solvers/`
-5. **Add example usage** in `examples/`
-6. **Update documentation**
-
-Example structure:
-```python
-# src/physics_agent/solvers/mechanics.py
-class ProjectileMotionSolver:
-    """Solver for projectile motion under constant gravity."""
-
-    def __init__(self, gravity: float = 9.81):
-        self.gravity = gravity
-
-    def solve(
-        self,
-        initial_position: np.ndarray,
-        initial_velocity: np.ndarray,
-        time: float
-    ) -> dict:
-        """Solve projectile motion equations.
-
-        Returns:
-            Dictionary with 'position', 'velocity', 'time' arrays
+    def generate(self, difficulty="简单"):
         """
-        # Implementation
+        生成一道速度问题
+
+        参数：
+            difficulty: "简单" | "中等"
+
+        返回：
+            {
+                "question": "题目文本",
+                "answer": "答案",
+                "explanation": "分步讲解"
+            }
+        """
         pass
 ```
 
-### Task 2: Adding LLM Integration
-
-1. **Define prompt templates** in `src/physics_agent/llm/prompts.py`
-2. **Create parser** for LLM responses
-3. **Add validation** to ensure physics consistency
-4. **Test with example problems**
-
-### Task 3: Running Simulations
+### 讲解生成逻辑
 
 ```python
-from physics_agent.simulators.particle import ParticleSimulator
+class ExplanationGenerator:
+    """讲解生成器"""
 
-# Create simulator
-sim = ParticleSimulator(timestep=0.01)
+    def generate_steps(self, question_type, given_values, target):
+        """
+        生成分步讲解
 
-# Add particles
-sim.add_particle(mass=1.0, position=[0, 0, 0], velocity=[1, 0, 0])
+        参数：
+            question_type: "求速度" | "求路程" | "求时间"
+            given_values: {"s": 1800, "t": 360}
+            target: "v"
 
-# Run simulation
-results = sim.run(duration=10.0)
+        返回：
+            ["第1步：...", "第2步：...", ...]
+        """
+        steps = []
 
-# Analyze results
-sim.plot_trajectories()
+        # 第1步：写公式
+        if target == "v":
+            steps.append("第 1 步：写出速度公式\n速度 v = 路程 s / 时间 t")
+        elif target == "s":
+            steps.append("第 1 步：写出路程公式\n路程 s = 速度 v × 时间 t")
+        # ...
+
+        # 第2步：单位换算（如需要）
+        # 第3步：代入计算
+        # 第4步：写出答案
+
+        return steps
 ```
 
 ---
 
-## Testing Strategy
+## 版本历史
 
-### Test Types
-
-#### 1. Unit Tests
-- Test individual functions and methods
-- Use pytest fixtures for common setups
-- Mock external dependencies
-
-#### 2. Integration Tests
-- Test solver pipelines end-to-end
-- Validate against known physics solutions
-- Test agent workflow
-
-#### 3. Property-Based Tests
-- Use `hypothesis` library for property-based testing
-- Verify conservation laws (energy, momentum, etc.)
-- Test numerical stability
-
-Example:
-```python
-from hypothesis import given, strategies as st
-import numpy as np
-
-@given(
-    mass=st.floats(min_value=0.1, max_value=100.0),
-    velocity=st.floats(min_value=-100.0, max_value=100.0)
-)
-def test_kinetic_energy_positive(mass, velocity):
-    """Kinetic energy must always be non-negative."""
-    ke = calculate_kinetic_energy(mass, velocity)
-    assert ke >= 0
-```
-
-#### 4. Physics Validation Tests
-- Compare against analytical solutions
-- Verify conservation laws are maintained
-- Test limiting cases (e.g., zero velocity, infinite mass ratios)
-
-### Running Tests
-
-```bash
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=physics_agent --cov-report=html
-
-# Run specific test file
-pytest tests/test_solvers/test_mechanics.py
-
-# Run tests matching pattern
-pytest -k "test_energy"
-
-# Run with verbose output
-pytest -v
-```
+- **2025-12-11 v1.0**：初始版本
+  - 支持速度公式相关题目生成
+  - 支持单位换算（m/s ↔ km/h）
+  - 确立输出格式规范
 
 ---
 
-## AI Assistant Guidelines
+## 未来规划
 
-### General Principles
+### v1.1（待定）
+- [ ] 添加密度相关题目
+- [ ] 增加选择题类型
+- [ ] 题目难度自动分级
 
-1. **Physics First**: Always verify that solutions are physically plausible
-   - Check units and dimensions
-   - Verify conservation laws
-   - Validate against known limits and special cases
-
-2. **Numerical Stability**: Be aware of numerical issues
-   - Avoid division by very small numbers
-   - Use stable numerical methods
-   - Validate convergence of iterative methods
-
-3. **Documentation**: Provide clear physics explanations
-   - Document equations in LaTeX when helpful
-   - Cite physics principles being used
-   - Explain assumptions and approximations
-
-4. **Testing**: Always write tests for physics code
-   - Test edge cases (zero, infinity, etc.)
-   - Verify conservation laws
-   - Compare against analytical solutions when available
-
-### When Adding Physics Code
-
-- [ ] Verify all equations against physics references
-- [ ] Check dimensional consistency of all terms
-- [ ] Use SI units internally
-- [ ] Add docstrings with physics explanation
-- [ ] Include mathematical formulation (LaTeX if complex)
-- [ ] Write tests that verify physical correctness
-- [ ] Add example usage
-- [ ] Consider numerical stability
-
-### When Debugging Physics Issues
-
-1. **Check units**: Most physics bugs are unit mismatches
-2. **Verify signs**: Check coordinate system and sign conventions
-3. **Test conservation**: Energy, momentum, angular momentum
-4. **Compare to limits**: What happens at v→0, m→∞, etc.?
-5. **Dimensional analysis**: Do units work out correctly?
-6. **Plot results**: Visual inspection often reveals issues
-
-### Common Physics Pitfalls to Avoid
-
-- **Don't** mix unit systems (SI and CGS, degrees and radians)
-- **Don't** hard-code physical constants
-- **Don't** ignore numerical precision issues
-- **Don't** assume convergence without verification
-- **Don't** forget to document coordinate system choices
-- **Do** validate conservation laws in tests
-- **Do** check limiting cases and special solutions
-- **Do** use established numerical libraries when available
-
-### Code Review Checklist
-
-When reviewing or writing physics code:
-
-- [ ] Units are consistent (all SI or clearly documented)
-- [ ] Physical constants from `scipy.constants` or `utils/constants.py`
-- [ ] Type hints on all function signatures
-- [ ] Docstrings with physics explanation
-- [ ] Conservation laws tested
-- [ ] Edge cases handled (zero velocity, zero mass, etc.)
-- [ ] Numerical stability considered
-- [ ] Example usage provided
-- [ ] Comparison to analytical solution if available
-
-### Interaction with LLMs
-
-When the physics agent uses LLMs:
-
-1. **Validate LLM Physics Output**: Never trust LLM physics without verification
-2. **Use Physics Constraints**: Constrain LLM outputs with physics knowledge
-3. **Parse Carefully**: Extract numerical values and validate units
-4. **Fallback to Classical Methods**: Use symbolic/numerical methods as ground truth
-5. **Explain Reasoning**: Have LLM explain physics reasoning for debugging
+### v2.0（待定）
+- [ ] 支持压强、浮力等力学知识点
+- [ ] 添加图片情境
+- [ ] 错题本功能
 
 ---
 
-## Quick Reference
+## 总结
 
-### Essential Commands
+### 核心原则（必须牢记）
 
-```bash
-# Setup
-python -m venv venv && source venv/bin/activate
-pip install -e ".[dev]"
+1. **服务对象**：成绩中等偏下的初中生
+2. **输出格式**：严格遵循【题目】【答案】【分步讲解】
+3. **语言风格**：简洁直接，不闲聊，不堆形容词
+4. **步骤要求**：写公式 → 代入 → 结果，三环节缺一不可
+5. **当前范围**：仅速度公式 v=s/t 及单位换算
 
-# Testing
-pytest                          # Run all tests
-pytest --cov=physics_agent     # With coverage
-pytest -k "mechanics"          # Run specific tests
+### 禁止清单（再次强调）
 
-# Code Quality
-ruff check .                   # Linting
-mypy src/                      # Type checking
-black src/ tests/              # Auto-formatting
-
-# Running Examples
-python examples/simple_mechanics.py
-
-# Documentation
-cd docs && make html           # Build docs
-```
-
-### Key Files to Review Before Changes
-
-- `src/physics_agent/utils/constants.py` - Physical constants
-- `src/physics_agent/utils/units.py` - Unit conversions
-- `tests/fixtures/` - Test data and known solutions
-- `examples/` - Example usage patterns
-
-### External Resources
-
-- [SciPy Documentation](https://docs.scipy.org/)
-- [NumPy Documentation](https://numpy.org/doc/)
-- [Physics Reference](https://en.wikipedia.org/wiki/Portal:Physics)
-- [Numerical Recipes](http://numerical.recipes/) - Numerical methods reference
+- ❌ 不提"作为AI模型"
+- ❌ 不跳步骤
+- ❌ 不使用学术术语
+- ❌ 不偏离格式规范
+- ❌ 不超出当前知识点范围
 
 ---
 
-## Version History
-
-- **2025-12-11**: Initial CLAUDE.md creation for fresh repository
-- Future updates should be logged here
-
----
-
-## Contributing
-
-This is the initial structure for the physics-agent project. As the codebase evolves:
-
-1. Keep this document updated with architectural changes
-2. Add specific examples from the actual implementation
-3. Document any deviations from these conventions with reasoning
-4. Update the directory structure to reflect actual layout
-5. Add performance benchmarks and optimization notes
-6. Document any external API integrations
-
-**Remember**: This document is for AI assistants to understand the codebase. Keep it factual, specific, and focused on conventions that affect code generation and decision-making.
+**本文档是AI助手的行动指南，必须严格遵守。**
